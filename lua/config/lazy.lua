@@ -26,7 +26,29 @@ require("lazy").setup({
   spec = {
     { import = "config.plugins" },
     { import = "config.plugins.lsp" },
-    { "catppuccin/nvim",            name = "catppuccin", priority = 1000, config = function() vim.cmd.colorscheme "catppuccin-frappe" end },
+    {
+      "catppuccin/nvim",
+      name = "catppuccin",
+      priority = 1000,
+      config = function()
+        local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
+        if not handle then
+          vim.cmd.colorscheme "catppuccin-latte"
+          return
+        end
+
+        local result = handle:read("*a")
+        handle:close()
+
+        result = result:gsub("%s+", "")
+
+        if result == "Dark" then
+          vim.cmd.colorscheme "catppuccin-frappe"
+        else
+          vim.cmd.colorscheme "catppuccin-latte"
+        end
+      end
+    },
   },
   change_detection = { enabled = false },
   checker = { enabled = true, notify = false },

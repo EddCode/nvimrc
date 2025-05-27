@@ -11,67 +11,31 @@ return {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
       { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim" },
+      { "nvim-lua/plenary.nvim", branch = "master" },
     },
-    config = function(_, options)
-      local chat = require("CopilotChat")
-
-      chat.setup(options)
-
-      local select = require("CopilotChat.select")
-      vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
-        chat.ask(args.args, { selection = select.visual })
-      end, { nargs = "*", range = true })
-
-      -- Inline chat with Copilot
-      vim.api.nvim_create_user_command("CopilotChatInline", function(args)
-        chat.ask(args.args, {
-          selection = select.visual,
-          window = {
-            layout = "float",
-            relative = "cursor",
-            width = 1,
-            height = 0.4,
-            row = 1,
-          },
-        })
-      end, { nargs = "*", range = true })
-    end,
     build = "make tiktoken",
     opts = {
       window = {
-        layout = "float",
-        border = "rounded",
-        title = "Copilot Chat",
-        zindex = 1,
-        relative = "editor",
+        width = 0.3,
       },
+      model = "gpt-4o",
       question_header = "  Ask Copilot ",
       answer_header = "  Copilot ",
+      autocomplete = true, -- Enable tab autocompletion in the chat panel
     },
     keys = {
-      -- Code related commands
-      { "<leader>ae", "<cmd>CopilotChatExplain<cr>",       desc = "CopilotChat - Explain code" },
-      { "<leader>at", "<cmd>CopilotChatTests<cr>",         desc = "CopilotChat - Generate tests" },
-      { "<leader>ar", "<cmd>CopilotChatReview<cr>",        desc = "CopilotChat - Review code" },
-      { "<leader>aR", "<cmd>CopilotChatRefactor<cr>",      desc = "CopilotChat - Refactor code" },
-      { "<leader>an", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
-      -- Chat with Copilot in visual mode
+      { "<leader>cc", ":CopilotChat<CR>",         mode = "n", desc = "CopilotChat - Open chat" },
+      { "<leader>ce", ":CopilotChatExplain<CR>",  mode = "v", desc = "CopilotChat - Explain code" },
+      { "<leader>cr", ":CopilotChatReview<CR>",   mode = "v", desc = "CopilotChat - Review code" },
+      { "<leader>cR", ":CopilotChatRefactor<CR>", mode = "v", desc = "CopilotChat - Refactor code" },
+      { "<leader>cf", ":CopilotChatFix<CR>",      mode = "v", desc = "CopilotChat - Fix Diagnostic" },
+      { "<leader>co", ":CopilotChatOptimize<CR>", mode = "v", desc = "CopilotChat - Optimize Code" },
+      { "<leader>cm", ":CopilotChatCommit<CR>",   mode = "n", desc = "CopilotChat - Generate commit message for all changes" },
+      { "<leader>ct", ":CopilotChatToggle<CR>",   mode = "n", desc = "CopilotChat - Toggle" },
+      { "<leader>c?", ":CopilotChatModels<CR>",   mode = "n", desc = "CopilotChat - Select Models" },
+      { "<leader>za", ":CopilotChatAgents<CR>",   mode = "n", desc = "CopilotChat - Select Agents" },
       {
-        "<leader>av",
-        ":CopilotChatVisual",
-        mode = "x",
-        desc = "CopilotChat - Open in vertical split",
-      },
-      {
-        "<leader>ax",
-        ":CopilotChatInline",
-        mode = "x",
-        desc = "CopilotChat - Inline chat",
-      },
-      -- Custom input for CopilotChat
-      {
-        "<leader>ai",
+        "<leader>ci",
         function()
           local input = vim.fn.input("Ask Copilot: ")
           if input ~= "" then
@@ -80,34 +44,18 @@ return {
         end,
         desc = "CopilotChat - Ask input",
       },
-      -- Generate commit message based on the git diff
       {
-        "<leader>am",
-        "<cmd>CopilotChatCommit<cr>",
-        desc = "CopilotChat - Generate commit message for all changes",
-      },
-      {
-        "<leader>aq",
+        "<leader>ca",
         function()
-          local input = vim.fn.input("Quick Chat: ")
-          if input ~= "" then
-            require("CopilotChat").ask(input, {
-              selection = require("CopilotChat.select").buffer,
-            })
+          local agent = vim.fn.input("Select Agent: ")
+          local question = vim.fn.input("Ask Copilot (Agent Mode): ")
+          if agent ~= "" and question ~= "" then
+            vim.cmd("CopilotChatAgents " .. agent)
+            vim.cmd("CopilotChat " .. question)
           end
         end,
-        desc = "CopilotChat - Quick chat",
+        desc = "CopilotChat - Ask with Agent",
       },
-      -- Fix the issue with diagnostic
-      { "<leader>af", "<cmd>CopilotChatFix<cr>",    desc = "CopilotChat - Fix Diagnostic" },
-      -- Clear buffer and chat history
-      { "<leader>al", "<cmd>CopilotChatReset<cr>",  desc = "CopilotChat - Clear buffer and chat history" },
-      -- Toggle Copilot Chat Vsplit
-      { "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
-      -- Copilot Chat Models
-      { "<leader>a?", "<cmd>CopilotChatModels<cr>", desc = "CopilotChat - Select Models" },
-      -- Copilot Chat Agents
-      { "<leader>aa", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
     },
   },
 }

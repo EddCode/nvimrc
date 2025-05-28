@@ -8,11 +8,11 @@ return {
     require('nvim-tree').setup {
       view = {
         side = 'right',
-        width = 50,
+        width = 30,
       },
       actions = {
         open_file = { quit_on_open = true }
-      }
+      },
     }
   end
 }

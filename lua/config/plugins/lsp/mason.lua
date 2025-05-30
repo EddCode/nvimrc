@@ -9,6 +9,7 @@ return {
     mason.setup()
 
     lspConfig.setup({
+      automatic_installation = true,
       ensure_installed = {
         "gopls",
         "ts_ls",

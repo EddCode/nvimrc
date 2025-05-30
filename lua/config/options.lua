@@ -55,10 +55,10 @@ vim.opt.cursorline = true
 vim.opt.visualbell = true
 
 local signs = {
-  Warn = "⚠️",
-  Error = "💩",
-  Hint = "💡",
-  Info = "👀",
+    Warn = "⚠️",
+    Error = "💩",
+    Hint = "💡",
+    Info = "👀",
 }
 
 for type, icon in pairs(signs) do
@@ -68,9 +68,9 @@ end
 
 vim.diagnostic.config({
   virtual_text = {
-    prefix = "💩",
+    prefix = "",
     spacing = 4,
   },
-  signs = false,
+  signs = true,
   underline = true,
 })

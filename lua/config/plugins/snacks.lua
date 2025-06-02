@@ -6,6 +6,7 @@ return {
     notifier = { enabled = true },
     indent = { enabled = true },
     picker = { enabled = true },
+    dashboard = { examples = "doom" },
   },
   keys = {
     -- Top Pickers & Explorer

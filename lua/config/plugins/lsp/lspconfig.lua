@@ -63,27 +63,6 @@ return {
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    local signs = {
-      Warn = "⚠️",
-      Error = "💩",
-      Hint = "💡",
-      Info = "👀",
-    }
-
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
-    end
-
-    vim.diagnostic.config({
-      virtual_text = {
-        prefix = "💩",
-        spacing = 4,
-      },
-      signs = false,
-      underline = true,
-    })
-
     lspconfig['html'].setup {
       capabilities = capabilities,
       on_attach = on_attach,

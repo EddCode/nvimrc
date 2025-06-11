@@ -4,6 +4,7 @@ vim.cmd("syntax on") -- Enable syntax highlighting
 
 -- Basic options
 vim.opt.undodir = vim.fn.expand("~/.vim/undodir")
+vim.opt.fileformats = unix
 vim.opt.undofile = true
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -55,10 +56,10 @@ vim.opt.cursorline = true
 vim.opt.visualbell = true
 
 local signs = {
-    Warn = "⚠️",
-    Error = "💩",
-    Hint = "💡",
-    Info = "👀",
+  Warn = "⚠️",
+  Error = "💩",
+  Hint = "💡",
+  Info = "👀",
 }
 
 for type, icon in pairs(signs) do

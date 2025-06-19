@@ -43,6 +43,13 @@ return {
           },
         },
       })
+
+      require("notify").setup({
+        rende = "compact",
+        stages = "fade_in_slide_out",
+      })
+
+      require("telescope").load_extension("notify")
     end
   }
 }

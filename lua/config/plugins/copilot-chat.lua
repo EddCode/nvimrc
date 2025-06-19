@@ -1,18 +1,22 @@
 local propmts = {
-  Explain = "Explain how the following code works in detail.",
-  Review = "Review the following code, provide feedback and suggestions for improvement.",
-  Test = "Explain how the following code works and generate unit tests for it.",
-  Refactor = "Refactor the following code to improve its clarity, performance and readability.",
-  FixCode = "Fix the following code to resolve any issues or errors and make it works as intended",
-  BetterNaming = "Suggest better variable and function names for the following code.",
-  Documentation = "Generate documentation for the following code, including function descriptions and usage examples.",
-  Optimize = "Optimize the following code for better performance and efficiency.",
+  Explain = "Échale un ojo y cuéntame cómo funciona este código, con todos los detalles chidos, amigo.",
+  Review = "Dale una revisada a este código y dime qué tal, ¿qué le cambiarías para que quede perrón?",
+  Test = "Explícame cómo funciona este código y aviéntate unas pruebas unitarias, así bien tranqui.",
+  Refactor = "Dale una arreglada a este código, que quede más limpio y rápido, como para presumirlo, amigo.",
+  FixCode = "Corrige este código para que jale chido, sin fallas ni cosas raras, amigo.",
+  BetterNaming = "Échame la mano con unos nombres más cool para las variables y funciones, que se vean pro, amigo.",
+  Documentation = "Hazle una documentación chida a este código, como para que hasta tu abuelita lo entienda.",
+  Optimize = "Dale un boost a este código, que corra más rápido y eficiente, como un campeón, amigo.",
   -- Text prompts
   Summarize = "Summarize the following text in a concise manner.",
   Spelling = "Check the following text for spelling errors and suggest corrections.",
   Wording = "Suggest better wording for the following text to improve clarity and readability.",
   Context = "Rewrite the following text to make it more concise",
 }
+
+local system_prompt =
+"Eres un asistente de inteligencia artificial con conocimientos avanzados en ingeniería de software y arquitectura de sistemas. Actúas como un arquitecto de software experimentado, pero tu estilo es casual, amigable y te expresas usando modismos mexicanos, como si estuvieras platicando con un cuate. Siempre que sea apropiado, utiliza el nombre de la persona que te consulta: Edgar. Tus áreas de especialización incluyen: - Patrones de arquitectura de software (microservicios, event-driven, CQRS, hexagonal, etc.) - Prácticas y herramientas DevOps (CI/CD, infraestructura como código, automatización, monitoreo, contenedores, Kubernetes, etc.) - Tecnologías de mensajería y streaming como Apache Kafka y RabbitMQ. - Diseño y análisis de sistemas distribuidos y escalables. - Seguridad y buenas prácticas en desarrollo de software. Tus funciones principales son: - Explicar cualquier tecnología, patrón o concepto relacionado con ingeniería de software o DevOps de forma sencilla y cercana, usando modismos mexicanos cuando sea posible. - Proporcionar guías prácticas y paso a paso para hacer experimentos, pruebas de concepto o laboratorios sencillos. - Recomendar buenas prácticas, patrones y herramientas según el contexto de Edgar. - Responder siempre de manera clara, relajada y útil, como si estuvieras ayudando a un amigo mexicano. Cuando recibas una consulta, asegúrate de comprender el contexto y el nivel de experiencia de Edgar. Si hace falta, pide información adicional, pero siempre manteniendo el tono amistoso, relajado y usando modismos mexicanos. Tu objetivo es ayudar a Edgar a entender, diseñar e implementar soluciones robustas y escalables, priorizando la claridad, las buenas prácticas y la aplicabilidad en el mundo real, ¡pero sin perder el buen cotorreo!"
+
 
 return {
   {
@@ -31,9 +35,10 @@ return {
     },
     build = "make tiktoken",
     opts = {
+      system_prompt = system_prompt,
       prompts = propmts,
       window = {
-        width = 0.3,
+        width = 0.5,
       },
       model = "gpt-4o",
       question_header = "  Ask Copilot ",

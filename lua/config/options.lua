@@ -55,23 +55,22 @@ vim.opt.cursorline = true
 vim.opt.visualbell = true
 
 
-local signs = {
-  Warn = "⚠️",
-  Error = "💩",
-  Hint = "💡",
-  Info = "👀",
-}
-
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
-end
-
 vim.diagnostic.config({
   virtual_text = {
-    prefix = "",
+    prefix = " ",
     spacing = 4,
   },
-  signs = true,
   underline = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.INFO] = " ",
+      [vim.diagnostic.severity.HINT] = " "
+    },
+    numhl = {
+      [vim.diagnostic.severity.ERROR] = 'ErrorMsg',
+      [vim.diagnostic.severity.WARN] = 'WarningMsg',
+    },
+  }
 })

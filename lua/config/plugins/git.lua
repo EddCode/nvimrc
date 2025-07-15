@@ -12,6 +12,7 @@ return {
       vim.keymap.set("n", "<leader>gc", ":Git commit<CR>", { desc = "Git commit" })
       vim.keymap.set("n", "<leader>gp", ":Git push<CR>", { desc = "Git push" })
       vim.keymap.set("n", "<leader>gl", ":Git pull", { desc = "Git pull" })
+      vim.keymap.set("n", "<leader>gb", ":Git blame", { desc = "Git blame" })
     end,
   },
   { "lewis6991/gitsigns.nvim" },

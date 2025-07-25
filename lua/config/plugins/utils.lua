@@ -15,8 +15,7 @@ return {
         views = {
           cmdline_popup = {
             position = {
-              row = "40%",
-              col = "50%",
+              row = "85%",
             },
             size = {
               width = 60,
@@ -24,11 +23,6 @@ return {
             },
           },
           popupmenu = {
-            relative = "editor",
-            position = {
-              row = 8,
-              col = "50%",
-            },
             size = {
               width = 60,
               height = 10,
@@ -45,8 +39,8 @@ return {
       })
 
       require("notify").setup({
-        rende = "compact",
-        stages = "fade_in_slide_out",
+        render = "compact",
+        stages = "fade",
       })
 
       require("telescope").load_extension("notify")

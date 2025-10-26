@@ -6,7 +6,6 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true },
   },
   config = function()
-    local lspconfig = require('lspconfig')
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
 
     local keymaps = vim.keymap
@@ -36,32 +35,32 @@ return {
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    lspconfig['html'].setup {
+    vim.lsp.enable('html', {
       capabilities = capabilities,
       on_attach = on_attach,
-    }
+    })
 
-    lspconfig['cssls'].setup {
+    vim.lsp.config('cssll', {
       capabilities = capabilities,
       on_attach = on_attach,
-    }
+    })
 
-    lspconfig['pyright'].setup {
+    vim.lsp.config('pyright', {
       capabilities = capabilities,
       on_attach = on_attach,
-    }
+    })
 
-    lspconfig['emmet_ls'].setup {
+    vim.lsp.config('emmet_ls', {
       capabilities = capabilities,
       on_attach = on_attach,
       filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css" },
-    }
+    })
 
-    lspconfig['gopls'].setup {
+    vim.lsp.config('gopls', {
       capabilities = capabilities,
       on_attach = on_attach,
       filetypes = { "go", "gomod" },
-      root_dir = lspconfig.util.root_pattern("go.mod", ".git"),
+      root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
       settings = {
         gopls = {
           usePlaceholders = true,
@@ -69,6 +68,6 @@ return {
           staticcheck = true,
         },
       },
-    }
+    })
   end
 }

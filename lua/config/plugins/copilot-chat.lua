@@ -39,6 +39,8 @@ return {
       prompts = propmts,
       window = {
         width = 0.5,
+        height = 0.8,
+        resize_to_fit = true,
       },
       model = "gpt-4o",
       question_header = "  Ask Copilot ",

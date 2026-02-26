@@ -6,23 +6,24 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true }
   },
   config = function()
-    local picker = require('snacks.picker')
-    local lspconfig = require("lspconfig")
-    local cmp_lsp = require('cmp_nvim_lsp')
+    local cmp_nvim_lsp = require('cmp_nvim_lsp')
 
-    local onAttach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
-      local keymap = vim.keymap
+    local keymaps = vim.keymap
 
-      keymap.set("n", "gd", function() picker.lsp_definitions() end, opts)
-      keymap.set("n", "gD", function() picker.lsp_declarations() end, opts)
-      keymap.set("n", "gy", function() picker.lsp_type_definitions() end, opts)
-      keymap.set("n", "gr", function() picker.lsp_references() end, opts)
-      keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
-      keymap.set("n", "<leader>h", function() vim.lsp.buf.hover() end, opts)  -- Show signature help
-      keymap.set("n", "<leader>D", function() picker.diagnostics() end, opts) -- Show buffer diagnostics
-      keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)           -- Show line diagnostics
+    local on_attach = function(client, bufnr)
+      keymaps.set("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "Show LSP references" })
+      keymaps.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Go to definitions" })
+      keymaps.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", { desc = "Show LSP implementations" })
+      keymaps.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", { desc = "show LSP Type Definitions" })
+      keymaps.set("n", "<leader>D", "<cmd>Telescope diagnostic bufnr=0<CR>", { desc = "Show buffer diagnostics" })
+      keymaps.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Show LSP code actions" })
+      keymaps.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Show LSP rename" })
+      keymaps.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+      keymaps.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
+      keymaps.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
+      keymaps.set("n", "K", vim.lsp.buf.hover, { desc = "Show LSP signature help" })
 
+      -- Enable formatting on save
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
         buffer = bufnr,
@@ -34,17 +35,32 @@ return {
 
     local capabilities = cmp_lsp.default_capabilities()
 
-    --lspconfig.ts_ls.setup({ on_attach = onAttach, capabilities = capabilities })
-    lspconfig.eslint.setup({ on_attach = onAttach, capabilities = capabilities })
-
-    lspconfig.cssls.setup({ on_attach = onAttach, capabilities = capabilities })
-    lspconfig.html.setup({ on_attach = onAttach, capabilities = capabilities })
-
-    lspconfig.gopls.setup({
-      on_attach = onAttach,
+    vim.lsp.enable('html', {
       capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
+    vim.lsp.config('cssll', {
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
+    vim.lsp.config('pyright', {
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+
+    vim.lsp.config('emmet_ls', {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css" },
+    })
+
+    vim.lsp.config('gopls', {
+      capabilities = capabilities,
+      on_attach = on_attach,
       filetypes = { "go", "gomod" },
-      root_dir = lspconfig.util.root_pattern("go.mod", ".git"),
+      root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
       settings = {
         gopls = {
           usePlaceholders = true,
@@ -52,17 +68,6 @@ return {
           staticcheck = true,
         },
       },
-    })
-
-    lspconfig.lua_ls.setup({
-      on_attach = onAttach,
-      capabilities = capabilities,
-      settings = {
-        Lua = {
-          diagnostics = { globals = { 'vim', 'Snacks' } }
-        },
-        telemetry = { enable = false }
-      }
     })
   end
 }

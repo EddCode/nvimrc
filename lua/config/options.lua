@@ -55,23 +55,5 @@ vim.opt.autoread = true
 vim.opt.cursorline = true
 vim.opt.visualbell = true
 
-local signs = {
-  Warn = "⚠️",
-  Error = "💩",
-  Hint = "💡",
-  Info = "👀",
-}
 
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
-end
 
-vim.diagnostic.config({
-  virtual_text = {
-    prefix = "",
-    spacing = 4,
-  },
-  signs = true,
-  underline = true,
-})

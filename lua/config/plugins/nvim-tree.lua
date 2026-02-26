@@ -13,8 +13,9 @@ return {
       actions = {
         open_file = { quit_on_open = true }
       },
-      renderer = {
-        highlight_opened_files = "all",
+      update_focused_file = {
+        enable = true,
+        update_cwd = false,
       }
     }
   end

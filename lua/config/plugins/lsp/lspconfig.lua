@@ -6,22 +6,46 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true }
   },
   config = function()
+    local lspconfig = require("lspconfig")
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
 
     local keymaps = vim.keymap
 
     local on_attach = function(client, bufnr)
-      keymaps.set("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "Show LSP references" })
-      keymaps.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Go to definitions" })
-      keymaps.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", { desc = "Show LSP implementations" })
-      keymaps.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", { desc = "show LSP Type Definitions" })
-      keymaps.set("n", "<leader>D", "<cmd>Telescope diagnostic bufnr=0<CR>", { desc = "Show buffer diagnostics" })
-      keymaps.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Show LSP code actions" })
-      keymaps.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Show LSP rename" })
-      keymaps.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
-      keymaps.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
-      keymaps.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
-      keymaps.set("n", "K", vim.lsp.buf.hover, { desc = "Show LSP signature help" })
+      local opts = { noremap = true, silent = true, buffer = bufnr }
+
+      opts.desc = "Show LSP references"
+      keymaps.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+
+      opts.desc = "Go to definitions"
+      keymaps.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+
+      opts.desc = "Show LSP implementations"
+      keymaps.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+
+      opts.desc = "Show LSP Type Definitions"
+      keymaps.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+
+      opts.desc = "Show buffer diagnostics"
+      keymaps.set("n", "<leader>D", "<cmd>Telescope diagnostic bufnr=0<CR>", opts)
+
+      opts.desc = "Show LSP code actions"
+      keymaps.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+
+      opts.desc = "Show LSP rename"
+      keymaps.set("n", "<leader>cr", vim.lsp.buf.rename, opts)
+
+      opts.desc = "Show line diagnostics"
+      keymaps.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+
+      opts.desc = "Go to next diagnostic"
+      keymaps.set("n", "]d", vim.diagnostic.goto_next, opts)
+
+      opts.desc = "Go to previous diagnostic"
+      keymaps.set("n", "[d", vim.diagnostic.goto_prev, opts)
+
+      opts.desc = "Show LSP signature help"
+      keymaps.set("n", "K", vim.lsp.buf.hover, opts)
 
       -- Enable formatting on save
       vim.api.nvim_create_autocmd("BufWritePre", {
@@ -33,41 +57,31 @@ return {
       })
     end
 
-    local capabilities = cmp_lsp.default_capabilities()
+    local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    vim.lsp.enable('html', {
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+    local servers = { "html", "cssls", "pyright", "emmet_ls", "gopls", "ts_ls", "lua_ls", "jsonls" }
 
-    vim.lsp.config('cssll', {
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+    for _, lsp in ipairs(servers) do
+      local opts = {
+        capabilities = capabilities,
+        on_attach = on_attach,
+      }
 
-    vim.lsp.config('pyright', {
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
+      if lsp == "gopls" then
+        opts.settings = {
+          gopls = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            staticcheck = true,
+          },
+        }
+      end
 
-    vim.lsp.config('emmet_ls', {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css" },
-    })
+      if lsp == "emmet_ls" then
+        opts.filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css" }
+      end
 
-    vim.lsp.config('gopls', {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      filetypes = { "go", "gomod" },
-      root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
-      settings = {
-        gopls = {
-          usePlaceholders = true,
-          completeUnimported = true,
-          staticcheck = true,
-        },
-      },
-    })
+      lspconfig[lsp].setup(opts)
+    end
   end
 }

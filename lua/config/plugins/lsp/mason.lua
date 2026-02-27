@@ -2,9 +2,9 @@ return {
   "williamboman/mason-lspconfig.nvim",
   build = ":MasonUpdate",
   dependencies = { "williamboman/mason.nvim" },
-  config = function ()
+  config = function()
     local mason = require("mason")
-    local lspConfig = require("mason-lspconfig")
+    local mason_lspconfig = require("mason-lspconfig")
 
     mason.setup()
 
@@ -28,28 +28,18 @@ return {
       }
     })
 
-    mason_lspconfig.setup {
+    mason_lspconfig.setup({
       ensure_installed = {
         "lua_ls",
         "eslint",
         "ts_ls",
-        "gopls",
         "pyright",
-        "gopls",
         "html",
         "cssls",
         "emmet_ls",
+        "jsonls",
       },
       automatic_installation = true,
-      ensure_installed = {
-        "gopls",
-        "ts_ls",
-        "eslint",
-        "lua_ls",
-        "jsonls",
-        "html",
-        "cssls"
-      }
     })
   end
 }

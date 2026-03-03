@@ -12,7 +12,7 @@ vim.api.nvim_create_user_command('RefreshTheme', function()
   local theme_mode = get_system_theme()
 
   if theme_mode == 'light' then
-    vim.cmd('colorscheme github_light_default')
+    vim.cmd('colorscheme catppucin-late')
   else
     vim.cmd('colorscheme matrix')
   end

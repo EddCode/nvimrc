@@ -6,7 +6,6 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true }
   },
   config = function()
-    local lspconfig = require("lspconfig")
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
 
     local keymaps = vim.keymap
@@ -15,19 +14,19 @@ return {
       local opts = { noremap = true, silent = true, buffer = bufnr }
 
       opts.desc = "Show LSP references"
-      keymaps.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+      keymaps.set("n", "gr", function() Snacks.picker.lsp_references() end, opts)
 
       opts.desc = "Go to definitions"
-      keymaps.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+      keymaps.set("n", "gd", function() Snacks.picker.lsp_definitions() end, opts)
 
       opts.desc = "Show LSP implementations"
-      keymaps.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+      keymaps.set("n", "gi", function() Snacks.picker.lsp_implementations() end, opts)
 
       opts.desc = "Show LSP Type Definitions"
-      keymaps.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+      keymaps.set("n", "gt", function() Snacks.picker.lsp_type_definitions() end, opts)
 
       opts.desc = "Show buffer diagnostics"
-      keymaps.set("n", "<leader>D", "<cmd>Telescope diagnostic bufnr=0<CR>", opts)
+      keymaps.set("n", "<leader>D", function() Snacks.picker.diagnostics_buffer() end, opts)
 
       opts.desc = "Show LSP code actions"
       keymaps.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -59,7 +58,7 @@ return {
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    local servers = { "html", "cssls", "pyright", "emmet_ls", "gopls", "ts_ls", "lua_ls", "jsonls" }
+    local servers = { "html", "cssls", "pyright", "emmet_ls", "gopls", "ts_ls", "jsonls" }
 
     for _, lsp in ipairs(servers) do
       local opts = {
@@ -81,7 +80,13 @@ return {
         opts.filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css" }
       end
 
-      lspconfig[lsp].setup(opts)
+      if vim.lsp.config and vim.lsp.enable then
+        vim.lsp.config(lsp, opts)
+        vim.lsp.enable(lsp)
+      else
+        -- Fallback for older Neovim versions
+        require("lspconfig")[lsp].setup(opts)
+      end
     end
   end
 }

@@ -11,7 +11,19 @@ return {
     }
   },
   dashboard = { examples = "doom" },
-  lazygit = { enabled = true },
+  lazygit = {
+    enabled = true,
+    configure = true,
+    config = {
+      os = { editPreset = "nvim-remote" },
+      keybinding = {
+        universal = {
+          edit = "o",
+          openFile = "<disabled>",
+        },
+      },
+    },
+  },
   gh = { enabled = true },
   explorer = {
     enabled = true,

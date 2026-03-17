@@ -12,9 +12,9 @@ vim.api.nvim_create_user_command('RefreshTheme', function()
   local theme_mode = get_system_theme()
 
   if theme_mode == 'light' then
-    vim.cmd('colorscheme catppucin-late')
+    vim.cmd('colorscheme github_dark_dimmed')
   else
-    vim.cmd('colorscheme matrix')
+    vim.cmd('colorscheme github_dark_dimmed')
   end
 
   vim.notify('Theme refreshed: ' .. theme_mode .. ' mode', vim.log.levels.INFO)

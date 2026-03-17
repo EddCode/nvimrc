@@ -9,10 +9,12 @@ return {
   'projekt0n/github-nvim-theme',
   name = 'github-theme',
   lazy = false,
+  priority = 1000,
   config = function()
     if is_light_mode() then
       vim.cmd('colorscheme github_light_default')
-      return
+    else
+      vim.cmd('colorscheme github_dark_dimmed')
     end
   end,
 }

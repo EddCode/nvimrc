@@ -39,11 +39,11 @@ return {
   { "<leader>su",      function() Snacks.picker.undo() end,                                    desc = "Undo History" },
   { "<leader>uC",      function() Snacks.picker.colorschemes() end,                            desc = "Colorschemes" },
   -- Git and GH
-  { "<leader>gb",      function() Snacks.git.blame_line() end,                                 desc = "Git Blame" },
-  { "<leader>gi",      function() Snacks.gh.issues() end,                                      desc = "GitHub Issues (open)" },
-  { "<leader>gI",      function() Snacks.gh.issues({ state = "all" }) end,                     desc = "GitHub Issues (all)" },
-  { "<leader>gp",      function() Snacks.gh.pull_requests() end,                               desc = "GitHub Pull Requests (open)" },
-  { "<leader>gP",      function() Snacks.gh.pull_requests({ state = "all" }) end,              desc = "GitHub Pull Requests (all)" },
+  { "<leader>sgb",      function() Snacks.git.blame_line() end,                                 desc = "Git Blame" },
+  { "<leader>sgi",      function() Snacks.gh.issues() end,                                      desc = "GitHub Issues (open)" },
+  { "<leader>sgI",      function() Snacks.gh.issues({ state = "all" }) end,                     desc = "GitHub Issues (all)" },
+  { "<leader>sgp",      function() Snacks.gh.pull_requests() end,                               desc = "GitHub Pull Requests (open)" },
+  { "<leader>sgP",      function() Snacks.gh.pull_requests({ state = "all" }) end,              desc = "GitHub Pull Requests (all)" },
   -- Other
   { "<leader>bd",      function() Snacks.bufdelete() end,                                      desc = "Delete Buffer" },
   { "<leader>cR",      function() Snacks.rename.rename_file() end,                             desc = "Rename File" },

@@ -46,47 +46,11 @@ return {
       opts.desc = "Show LSP signature help"
       keymaps.set("n", "K", vim.lsp.buf.hover, opts)
 
-      local js_filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
-
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
-        buffer = bufnr,
-        callback = function()
-          local ft = vim.bo[bufnr].filetype
-          vim.lsp.buf.format({
-            async = false,
-            filter = function(c)
-              if vim.tbl_contains(js_filetypes, ft) then
-                return c.name ~= "ts_ls"
-              end
-              return true
-            end,
-          })
-        end
-      })
-
-      if client.name == "eslint" then
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          group = vim.api.nvim_create_augroup("EslintFixAll", { clear = true }),
-          buffer = bufnr,
-          callback = function()
-            local eslint_clients = vim.lsp.get_clients({ bufnr = bufnr, name = "eslint" })
-            for _, c in ipairs(eslint_clients) do
-              local uri = vim.uri_from_bufnr(bufnr)
-              local version = vim.lsp.util.buf_versions and vim.lsp.util.buf_versions[bufnr] or 0
-              c.request_sync("workspace/executeCommand", {
-                command = "eslint.applyAllFixes",
-                arguments = { { uri = uri, version = version } },
-              }, 3000, bufnr)
-            end
-          end
-        })
-      end
     end
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    local servers = { "html", "cssls", "pyright", "emmet_ls", "gopls", "ts_ls", "jsonls", "eslint" }
+    local servers = { "html", "cssls", "ruff", "emmet_ls", "gopls", "ts_ls", "jsonls", "eslint", "lua_ls", "astro", "astro" }
 
     for _, lsp in ipairs(servers) do
       local opts = {
@@ -105,7 +69,22 @@ return {
       end
 
       if lsp == "emmet_ls" then
-        opts.filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css" }
+        opts.filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "css", "astro" }
+      end
+
+      if lsp == "lua_ls" then
+        opts.settings = {
+           Lua = {
+             diagnostics = {
+               globals = { "vim" },
+             },
+             telemetry = { enable = false },
+             workspace = {
+               library = vim.api.nvim_get_runtime_file("", true),
+               checkThirdParty = false,
+             }
+           }
+        }
       end
 
       if vim.lsp.config and vim.lsp.enable then

@@ -33,11 +33,13 @@ return {
         "lua_ls",
         "eslint",
         "ts_ls",
-        "pyright",
+        "ruff",
         "html",
         "cssls",
         "emmet_ls",
         "jsonls",
+        "gopls",
+        "astro"
       },
       automatic_installation = true,
     })

@@ -34,6 +34,7 @@ return {
         "eslint",
         "ts_ls",
         "ruff",
+        "pyright",
         "html",
         "cssls",
         "emmet_ls",

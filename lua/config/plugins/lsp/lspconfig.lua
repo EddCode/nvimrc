@@ -10,11 +10,16 @@ return {
 
     local keymaps = vim.keymap
 
-    local on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
+    -- Keymaps live in LspAttach instead of `on_attach`: several servers (ts_ls,
+    -- eslint, pyright) ship their own on_attach and ours would replace it.
+    local on_attach = function(args)
+      local opts = { noremap = true, silent = true, buffer = args.buf }
 
+      -- nowait: Neovim's default grr/gri/gra/grn mappings would delay `gr`
+      opts.nowait = true
       opts.desc = "Show LSP references"
       keymaps.set("n", "gr", function() Snacks.picker.lsp_references() end, opts)
+      opts.nowait = nil
 
       opts.desc = "Go to definitions"
       keymaps.set("n", "gd", function() Snacks.picker.lsp_definitions() end, opts)
@@ -48,15 +53,31 @@ return {
 
     end
 
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup("config_lsp_keymaps", { clear = true }),
+      callback = on_attach,
+    })
+
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    local servers = { "html", "cssls", "ruff", "emmet_ls", "gopls", "ts_ls", "jsonls", "eslint", "lua_ls", "astro", "astro" }
+    local servers = { "html", "cssls", "ruff", "pyright", "emmet_ls", "gopls", "ts_ls", "jsonls", "eslint", "lua_ls", "astro" }
 
     for _, lsp in ipairs(servers) do
       local opts = {
         capabilities = capabilities,
-        on_attach = on_attach,
       }
+
+      if lsp == "pyright" then
+        -- use the project's virtualenv when it has one
+        opts.on_init = function(client)
+          local python = (client.root_dir or vim.fn.getcwd()) .. "/.venv/bin/python"
+          if vim.uv.fs_stat(python) then
+            client.settings = vim.tbl_deep_extend("force", client.settings or {}, {
+              python = { pythonPath = python },
+            })
+          end
+        end
+      end
 
       if lsp == "gopls" then
         opts.settings = {
